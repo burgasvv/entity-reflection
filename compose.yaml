@@ -1,0 +1,13 @@
+
+services:
+
+  postgres:
+    image: postgres:latest
+    container_name: entity_reflection_postgres
+    ports:
+      - "6000:5432"
+    environment:
+      POSTGRES_USERNAME: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: entity_reflection_db
+      PGDATA: /var/lib/data/postgresql

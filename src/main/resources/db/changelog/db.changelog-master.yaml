@@ -1,0 +1,6 @@
+
+databaseChangeLog:
+  - includeAll:
+      path: db/changelog/create/
+  - includeAll:
+      path: db/changelog/populate/
