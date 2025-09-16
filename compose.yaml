@@ -11,3 +11,15 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: entity_reflection_db
       PGDATA: /var/lib/data/postgresql
+
+  entity-reflection:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/entity_reflection_db

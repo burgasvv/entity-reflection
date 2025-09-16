@@ -43,17 +43,7 @@ public final class Wallet extends BaseEntity {
     @OneToMany(mappedBy = "senderWallet", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Operation> operationsBySenderWallet = new ArrayList<>();
 
-    public void addOperationBySenderWallet(final Operation operation) {
-        this.operationsBySenderWallet.add(operation);
-        operation.setSenderWallet(this);
-    }
-
     @Builder.Default
     @OneToMany(mappedBy = "receiverWallet", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Operation> operationsByReceiverWallet = new ArrayList<>();
-
-    public void addOperationByReceiverWallet(final Operation operation) {
-        this.operationsByReceiverWallet.add(operation);
-        operation.setReceiverWallet(this);
-    }
 }
