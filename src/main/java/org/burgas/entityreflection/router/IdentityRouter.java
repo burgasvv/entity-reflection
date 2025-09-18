@@ -49,14 +49,24 @@ public class IdentityRouter {
                                         )
                 )
                 .POST(
-                        "/api/v1/identities/create-update", request -> {
+                        "/api/v1/identities/create", request -> {
                             UUID identityId = this.identityService.createOrUpdate(
                                     request.body(IdentityRequest.class)
                             );
                             return ServerResponse
-                                    .status(HttpStatus.FOUND)
+                                    .status(HttpStatus.OK)
                                     .contentType(MediaType.APPLICATION_JSON)
-                                    .location(URI.create("/api/v1/identities/by-id?identityId=" + identityId))
+                                    .body(identityId);
+                        }
+                )
+                .PUT(
+                        "/api/v1/identities/update", request -> {
+                            UUID identityId = this.identityService.createOrUpdate(
+                                    request.body(IdentityRequest.class)
+                            );
+                            return ServerResponse
+                                    .status(HttpStatus.OK)
+                                    .contentType(MediaType.APPLICATION_JSON)
                                     .body(identityId);
                         }
                 )

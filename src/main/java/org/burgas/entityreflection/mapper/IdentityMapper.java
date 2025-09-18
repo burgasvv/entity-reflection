@@ -10,9 +10,10 @@ import org.burgas.entityreflection.entity.identity.Identity;
 import org.burgas.entityreflection.entity.identity.IdentityFio;
 import org.burgas.entityreflection.entity.identity.IdentitySecure;
 import org.burgas.entityreflection.mapper.contract.EntityMapper;
+import org.burgas.entityreflection.repository.CompanyRepository;
 import org.burgas.entityreflection.repository.IdentityRepository;
-import org.burgas.entityreflection.service.CompanyService;
 import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -26,12 +27,13 @@ public final class IdentityMapper implements
         EntityMapper<UUID, IdentityRequest, Identity, IdentityResponseFull, IdentityResponseShort> {
 
     private final IdentityRepository identityRepository;
-    private final ObjectFactory<CompanyService> companyServiceObjectFactory;
+    private final ObjectFactory<CompanyRepository> companyRepositoryObjectFactory;
     private final ObjectFactory<CompanyMapper> companyMapperObjectFactory;
     private final ObjectFactory<MachineMapper> machineMapperObjectFactory;
+    private final PasswordEncoder passwordEncoder;
 
-    private CompanyService getCompanyService() {
-        return this.companyServiceObjectFactory.getObject();
+    private CompanyRepository getCompanyRepository() {
+        return this.companyRepositoryObjectFactory.getObject();
     }
 
     private CompanyMapper getCompanyMapper() {
@@ -57,9 +59,6 @@ public final class IdentityMapper implements
                             String username = this.handleData(
                                     identitySecure.getUsername(), identity.getIdentitySecure().getUsername()
                             );
-                            String password = this.handleData(
-                                    identitySecure.getPassword(), identity.getIdentitySecure().getPassword()
-                            );
 
                             IdentityFio identityFio = this.handleData(
                                     identityRequest.getIdentityFio(), identity.getIdentityFio()
@@ -68,8 +67,10 @@ public final class IdentityMapper implements
                             String lastName = this.handleData(identityFio.getLastname(), identity.getIdentityFio().getLastname());
                             String patronymic = this.handleData(identityFio.getPatronymic(), identity.getIdentityFio().getPatronymic());
 
+                            UUID companyId = this.handleData(identityRequest.getCompanyId(),
+                                    UUID.nameUUIDFromBytes("0".getBytes(StandardCharsets.UTF_8)));
                             Company company = this.handleData(
-                                    getCompanyService().findCompany(identityRequest.getCompanyId()),
+                                    getCompanyRepository().findById(companyId).orElse(null),
                                     identity.getCompany()
                             );
 
@@ -79,7 +80,7 @@ public final class IdentityMapper implements
                                             IdentitySecure.builder()
                                                     .authority(authority)
                                                     .username(username)
-                                                    .password(password)
+                                                    .password(identity.getPassword())
                                                     .build()
                                     )
                                     .identityFio(
@@ -121,8 +122,10 @@ public final class IdentityMapper implements
                                     identityFio.getPatronymic(), IDENTITY_PATRONYMIC_FIELD_EMPTY.getMessage()
                             );
 
+                            UUID companyId = this.handleData(identityRequest.getCompanyId(),
+                                    UUID.nameUUIDFromBytes("0".getBytes(StandardCharsets.UTF_8)));
                             Company company = this.handleDataThrowable(
-                                    getCompanyService().findCompany(identityRequest.getCompanyId()),
+                                    getCompanyRepository().findById(companyId).orElse(null),
                                     IDENTITY_COMPANY_FIELD_EMPTY.getMessage()
                             );
 
@@ -131,7 +134,7 @@ public final class IdentityMapper implements
                                             IdentitySecure.builder()
                                                     .authority(authority)
                                                     .username(username)
-                                                    .password(password)
+                                                    .password(this.passwordEncoder.encode(password))
                                                     .build()
                                     )
                                     .identityFio(

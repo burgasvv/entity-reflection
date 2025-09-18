@@ -6,8 +6,11 @@ import org.burgas.entityreflection.entity.BaseEntity;
 import org.burgas.entityreflection.entity.company.Company;
 import org.burgas.entityreflection.entity.machine.Machine;
 import org.burgas.entityreflection.entity.wallet.Wallet;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,7 +30,7 @@ import java.util.UUID;
                 @NamedAttributeNode(value = "wallets")
         }
 )
-public final class Identity extends BaseEntity {
+public final class Identity extends BaseEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -70,13 +73,18 @@ public final class Identity extends BaseEntity {
     @OneToMany(mappedBy = "identity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Wallet> wallets = new ArrayList<>();
 
-    public void addWallet(final Wallet wallet) {
-        this.wallets.add(wallet);
-        wallet.setIdentity(this);
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(this.identitySecure.getAuthority());
     }
 
-    public void addWallets(final List<Wallet> wallets) {
-        this.wallets.addAll(wallets);
-        wallets.forEach(wallet -> wallet.setIdentity(this));
+    @Override
+    public String getPassword() {
+        return this.identitySecure.getPassword();
+    }
+
+    @Override
+    public String getUsername() {
+        return this.identitySecure.getUsername();
     }
 }

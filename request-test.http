@@ -1,6 +1,17 @@
 
 
 
+### Security Requests
+
+
+
+###
+GET /api/v1/security/csrf-token
+Host: localhost:9000
+Accept: application/json
+
+
+
 ### Company Requests
 
 
@@ -15,34 +26,40 @@ GET /api/v1/companies/by-id?companyId=e1202230-bedf-4325-9fdb-c4751f062a33
 Host: localhost:9000
 Accept: application/json
 
-###
+### Use CSRF
 POST /api/v1/companies/create-update
 Host: localhost:9000
 Accept: application/json
 Content-Type: application/json
+Authorization: Basic admin@gmail.com admin
+X-Csrf-Token: kOYx--UG2LQUaBl41rJzRT3caC5sTtGHhXLIbUlMorrZFuOIpodXw91j6IQ5CS5Ks59HdVnlRRdbLOaq50T9Cy0uk9zpc9K8
 
 {
     "name": "SmartLanguages Corp.",
     "description": "Описание компании SmartLanguages Corp."
 }
 
-###
+### Use CSRF
 POST /api/v1/companies/create-update
 Host: localhost:9000
 Accept: application/json
 Content-Type: application/json
+Authorization: Basic admin@gmail.com admin
+X-Csrf-Token: 75nYzKBLi4rjMe2Pj5YbSpTXWa4wjcHnPc6p7brLoGYw5i-P2fi-9Jguu7rOUNq96rsvevDudJcH7_bKX_ici96pkQAAgx67
 
 {
     "id": "e354be59-d635-4665-be2c-4a54896fb9fb",
     "name": "ForeignSmartLanguages Corp."
 }
 
-###
+### Use CSRF
 DELETE /api/v1/companies/delete?companyId=e354be59-d635-4665-be2c-4a54896fb9fb
 Host: localhost:9000
 Accept: application/json
+Authorization: Basic admin@gmail.com admin
+X-Csrf-Token: 75nYzKBLi4rjMe2Pj5YbSpTXWa4wjcHnPc6p7brLoGYw5i-P2fi-9Jguu7rOUNq96rsvevDudJcH7_bKX_ici96pkQAAgx67
 
-###
+### Use CSRF
 POST /api/v1/companies/add-identities?companyId=e1202230-bedf-4325-9fdb-c4751f062a33
 Host: localhost:9000
 Accept: application/json
@@ -92,34 +109,37 @@ GET /api/v1/identities/by-id?identityId=cb88edab-d7d2-451f-8be8-517a036fd2d6
 Host: localhost:9000
 Accept: application/json
 
-###
-POST /api/v1/identities/create-update
+### Use CSRF
+POST /api/v1/identities/create
 Host: localhost:9000
 Accept: application/json
 Content-Type: application/json
+X-Csrf-Token: LG3RDprPS_du9Ane-HLHc8dTF76Q4My8wy2hIvnmzO_MzgXRGgy3NqKqe8dDlT7snV_zQ6NqOoengvuRoRuURJ2E_Yn8qzTl
 
 {
     "identitySecure": {
-        "authority": "USER",
-        "username": "user@gmail.com",
-        "password": "user"
+        "authority": "ADMIN",
+        "username": "admin@gmail.com",
+        "password": "admin"
     },
     "identityFio": {
         "firstname": "Пальцев",
         "lastname": "Виктор",
         "patronymic": "Николаевич"
     },
-    "companyId": "d6da80de-3738-4717-a165-fbb456ade2e9"
+    "companyId": "e1202230-bedf-4325-9fdb-c4751f062a33"
 }
 
-###
-POST /api/v1/identities/create-update
+### Use CSRF
+PUT /api/v1/identities/update
 Host: localhost:9000
 Accept: application/json
 Content-Type: application/json
+Authorization: Basic admin@gmail.com admin
+X-Csrf-Token: JmOr19T90r6GEISpKxTvTDHn3MSjFQEbn8msm_1Ax54eQQrJEALN7-yY4o6rcbObTjnbfFXe8f2UdzY2_f-Z_Zki9vguJDv9
 
 {
-    "id": "cb88edab-d7d2-451f-8be8-517a036fd2d6",
+    "id": "cecaef27-9341-4507-a687-5d892186030d",
     "identityFio": {
         "firstname": "Бушуев",
         "lastname": "Владислав",
@@ -127,7 +147,7 @@ Content-Type: application/json
     }
 }
 
-###
+### Use CSRF
 POST /api/v1/identities/add-machines?
     identityId=cb88edab-d7d2-451f-8be8-517a036fd2d6&
     machineId=b7b6da7b-e8f4-4995-a7ad-72b7396f7e9d&
@@ -152,7 +172,7 @@ GET /api/v1/machines/by-id?machineId=b7b6da7b-e8f4-4995-a7ad-72b7396f7e9d
 Host: localhost:9000
 Accept: application/json
 
-###
+### Use CSRF
 POST /api/v1/machines/create-update
 Host: localhost:9000
 Accept: application/json
@@ -164,7 +184,7 @@ Content-Type: application/json
     "cost": 190600
 }
 
-###
+### Use CSRF
 POST /api/v1/machines/create-update
 Host: localhost:9000
 Accept: application/json
@@ -175,12 +195,12 @@ Content-Type: application/json
     "description": "Описание машины Aqua For Life"
 }
 
-###
+### Use CSRF
 DELETE /api/v1/machines/delete?machineId=409890dd-3158-4535-9adc-62ce10527c79
 Host: localhost:9000
 Accept: application/json
 
-###
+### Use CSRF
 POST /api/v1/machines/add-identities?
     machineId=bcbd96cc-4d60-4943-a6f3-1e652ecb6337&
     identityId=2577ca20-fc5c-4112-ac40-5b0c0dabe0a8&
@@ -204,7 +224,7 @@ GET /api/v1/wallets/by-id?walletId=4dab7381-6233-4c04-958e-3f3e0e5e7ac7
 Host: localhost:9000
 Accept: application/json
 
-###
+### Use CSRF
 POST /api/v1/wallets/create-update
 Host: localhost:9000
 Accept: application/json
@@ -214,17 +234,17 @@ Content-Type: application/json
     "identityId": "383b9311-8560-4f34-8033-2a7c69bfc1b8"
 }
 
-###
+### Use CSRF
 PUT /api/v1/wallets/deposit?walletId=72996771-4596-4169-a557-65589404f5e7&amount=3000.0
 Host: localhost:9000
 Accept: application/json
 
-###
+### Use CSRF
 PUT /api/v1/wallets/withdraw?walletId=4dab7381-6233-4c04-958e-3f3e0e5e7ac7&amount=1000.0
 Host: localhost:9000
 Accept: application/json
 
-###
+### Use CSRF
 PUT /api/v1/wallets/transfer?
     senderId=72996771-4596-4169-a557-65589404f5e7&
     receiverId=4dab7381-6233-4c04-958e-3f3e0e5e7ac7&

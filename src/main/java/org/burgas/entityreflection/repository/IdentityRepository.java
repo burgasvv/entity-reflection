@@ -4,6 +4,7 @@ import org.burgas.entityreflection.entity.identity.Identity;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -15,4 +16,12 @@ public interface IdentityRepository extends JpaRepository<Identity, UUID> {
     @Override
     @EntityGraph(value = "identity-entity-graph", type = EntityGraph.EntityGraphType.FETCH)
     @NotNull Optional<Identity> findById(@NotNull UUID uuid);
+
+    @Query(
+            value = """
+                    select i from org.burgas.entityreflection.entity.identity.Identity i
+                        where i.identitySecure.username = :username
+                    """
+    )
+    Optional<Identity> findIdentityByIdentitySecureUsername(final String username);
 }
